@@ -3,8 +3,6 @@
 import math
 import cv2
 import numpy as np
-import time
-import mxnet as mx
 
 
 def nms(boxes, overlap_threshold, mode='Union'):
