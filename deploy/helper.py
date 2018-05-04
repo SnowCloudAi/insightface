@@ -147,36 +147,21 @@ def detect_first_stage(img, net, scale, threshold):
     -------
         total_boxes : bboxes
     """
-    start_time = time.time()
     height, width, _ = img.shape
     hs = int(np.ceil(height * scale))
     ws = int(np.ceil(width * scale))
-    print("0--- %s seconds ---" % (time.time() - start_time))
-    
-    start_time = time.time()
     im_data = cv2.resize(img, (ws,hs))
-    print("1--- %s seconds ---" % (time.time() - start_time))
-    
-    start_time = time.time()
     # adjust for the network input
     input_buf = adjust_input(im_data)
     output = net.predict(input_buf)
-    print("2--- %s seconds ---" % (time.time() - start_time))
-    start_time = time.time()
     boxes = generate_bbox(output[1][0,1,:,:], output[0], scale, threshold)
-    print("3--- %s seconds ---" % (time.time() - start_time))
 
     if boxes.size == 0:
         return None
 
     # nms
-    start_time = time.time()
     pick = nms(boxes[:,0:5], 0.5, mode='Union')
-    print("4--- %s seconds ---" % (time.time() - start_time))
-    start_time = time.time()
     boxes = boxes[pick]
-    print("5--- %s seconds ---" % (time.time() - start_time))
-    print(boxes)
     return boxes
 
 def detect_first_stage_warpper( args ):
