@@ -176,6 +176,7 @@ def detect_first_stage(img, net, scale, threshold):
     start_time = time.time()
     boxes = boxes[pick]
     print("5--- %s seconds ---" % (time.time() - start_time))
+    print(boxes)
     return boxes
 
 def detect_first_stage_warpper( args ):

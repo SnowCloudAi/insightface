@@ -245,7 +245,7 @@ class MtcnnDetector(object):
           #          izip(repeat(img), self.PNets[:len(batch)], [scales[i] for i in batch], repeat(self.threshold[0])) )
             for i in izip(repeat(img), self.PNets[:len(batch)], [scales[i] for i in batch], repeat(self.threshold[0])) :
                 local_boxes = detect_first_stage_warpper(i)
-            total_boxes.extend(local_boxes)
+                total_boxes.extend(local_boxes)
         
         # remove the Nones 
         total_boxes = [ i for i in total_boxes if i is not None]
