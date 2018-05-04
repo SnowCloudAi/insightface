@@ -4,6 +4,7 @@ import math
 import cv2
 import numpy as np
 import time
+import mxnet as mx
 
 
 def nms(boxes, overlap_threshold, mode='Union'):
@@ -148,8 +149,8 @@ def detect_first_stage(img, net, scale, threshold):
     """
     start_time = time.time()
     height, width, _ = img.shape
-    hs = int(np.ceil(height * scale))
-    ws = int(np.ceil(width * scale))
+    hs = int(mx.ndarray.ceil(height * scale))
+    ws = int(mx.ndarray.ceil(width * scale))
     print("0--- %s seconds ---" % (time.time() - start_time))
     
     start_time = time.time()

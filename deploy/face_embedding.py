@@ -22,7 +22,7 @@ import face_preprocess
 
 
 def do_flip(data):
-  for idx in xrange(data.shape[0]):
+  for idx in range(data.shape[0]):
     data[idx,:,:] = np.fliplr(data[idx,:,:])
 
 class FaceModel:
@@ -53,7 +53,7 @@ class FaceModel:
     model.set_params(arg_params, aux_params)
     self.model = model
     mtcnn_path = os.path.join(os.path.dirname(__file__), 'mtcnn-model')
-    detector = MtcnnDetector(model_folder=mtcnn_path, ctx=ctx, num_worker=1, accurate_landmark = True, threshold=[0.0,0.0,0.2])
+    detector = MtcnnDetector(model_folder=mtcnn_path, ctx=ctx, num_worker=1, accurate_landmark = True, threshold=[0.6,0.7,0.7])
     self.detector = detector
 
 
