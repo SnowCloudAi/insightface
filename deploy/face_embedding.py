@@ -90,5 +90,5 @@ class FaceModel:
       else:
         embedding += _embedding
     embedding = sklearn.preprocessing.normalize(embedding).flatten()
-    return embedding
+    return embedding,bbox
 
