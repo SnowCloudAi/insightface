@@ -59,7 +59,7 @@ class FaceModel:
 
   def get_feature(self, face_img):
     #face_img is bgr image
-    ret = self.detector.detect_face_limited(face_img, det_type = self.args.det)
+    ret = self.detector.detect_face(face_img)
     if ret is None:
       return None
     bbox, points = ret

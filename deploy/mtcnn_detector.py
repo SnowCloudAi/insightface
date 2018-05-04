@@ -4,9 +4,12 @@ import mxnet as mx
 import numpy as np
 import math
 import cv2
-from multiprocessing import Pool
+#from multiprocessing import Pool
 from itertools import repeat
-from itertools import izip
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 from helper import nms, adjust_input, generate_bbox, detect_first_stage_warpper
 
 class MtcnnDetector(object):
@@ -18,7 +21,7 @@ class MtcnnDetector(object):
     def __init__(self,
                  model_folder='.',
                  minsize = 20,
-                 threshold = [0.6, 0.7, 0.8],
+                 threshold = [0.6, 0.7, 0.7],
                  factor = 0.709,
                  num_worker = 1,
                  accurate_landmark = False,
@@ -54,7 +57,7 @@ class MtcnnDetector(object):
             workner_net = mx.model.FeedForward.load(models[0], 1, ctx=ctx)
             self.PNets.append(workner_net)
 
-        self.Pool = Pool(num_worker)
+       # self.Pool = Pool(num_worker)
 
         self.RNet = mx.model.FeedForward.load(models[1], 1, ctx=ctx)
         self.ONet = mx.model.FeedForward.load(models[2], 1, ctx=ctx)
@@ -238,8 +241,10 @@ class MtcnnDetector(object):
         sliced_index = self.slice_index(len(scales))
         total_boxes = []
         for batch in sliced_index:
-            local_boxes = self.Pool.map( detect_first_stage_warpper, \
-                    izip(repeat(img), self.PNets[:len(batch)], [scales[i] for i in batch], repeat(self.threshold[0])) )
+          #  local_boxes = self.Pool.map( detect_first_stage_warpper, \
+          #          izip(repeat(img), self.PNets[:len(batch)], [scales[i] for i in batch], repeat(self.threshold[0])) )
+            for i in izip(repeat(img), self.PNets[:len(batch)], [scales[i] for i in batch], repeat(self.threshold[0])) :
+                local_boxes = detect_first_stage_warpper(i)
             total_boxes.extend(local_boxes)
         
         # remove the Nones 
@@ -391,7 +396,7 @@ class MtcnnDetector(object):
 
 
     def detect_face_limited(self, img, det_type=2):
-        height, width, _ = img.shape
+        height, width , _= img.shape
         if det_type>=2:
           total_boxes = np.array( [ [0.0, 0.0, img.shape[1], img.shape[0], 0.9] ] ,dtype=np.float32)
           num_box = total_boxes.shape[0]
